@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ATM Management System</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: linear-gradient(135deg, #141e30, #243b55);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .atm {
+            width: 380px;
+            max-width: 100%;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            text-align: center;
+        }
+
+        h1 {
+            color: #123456;
+            font-size: 25px;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: gray;
+            margin-bottom: 25px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin: 7px 0;
+            border: none;
+            border-radius: 6px;
+            background: #123456;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #007bff;
+        }
+
+        .exit {
+            background: #dc3545;
+        }
+
+        .exit:hover {
+            background: #b52a37;
+        }
+
+        .screen {
+            background: #f1f5f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            min-height: 55px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #message {
+            color: #123456;
+            font-weight: bold;
+        }
+
+        .balance {
+            font-size: 23px;
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="atm">
+
+    <h1>ATM MANAGEMENT SYSTEM</h1>
+    <p class="subtitle">Welcome to Our ATM Service</p>
+
+    <div id="login">
+        <h3>ATM Login</h3>
+        <input type="password" id="pin"
+               placeholder="Enter 4-Digit PIN"
+               maxlength="4">
+        <button onclick="login()">Login</button>
+    </div>
+
+    <div id="menu" class="hidden">
+
+        <div class="screen">
+            <p id="message">Login Successful!</p>
+        </div>
+
+        <button onclick="checkBalance()">1. Check Balance</button>
+        <button onclick="deposit()">2. Deposit Money</button>
+        <button onclick="withdraw()">3. Withdraw Money</button>
+        <button onclick="changePin()">4. Change PIN</button>
+        <button class="exit" onclick="logout()">5. Exit</button>
+
+        <div class="screen">
+            <p id="result">Select an Option</p>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    let pin = "1234";
+    let balance = 5000;
+
+    function login() {
+        let enteredPin =
+            document.getElementById("pin").value;
+
+        if (enteredPin === pin) {
+            document.getElementById("login").classList.add("hidden");
+            document.getElementById("menu").classList.remove("hidden");
+            document.getElementById("message").innerHTML =
+                "Login Successful!";
+        } else {
+            alert("Incorrect PIN! Access Denied.");
+        }
+    }
+
+    function checkBalance() {
+        document.getElementById("result").innerHTML =
+            "Your Current Balance: <br><span class='balance'>Rs. " +
+            balance.toFixed(2) + "</span>";
+    }
+
+    function deposit() {
+        let amount = parseFloat(
+            prompt("Enter Amount to Deposit:")
+        );
+
+        if (!Number.isFinite(amount) || amount <= 0) {
+            document.getElementById("result").innerHTML =
+                "Invalid Amount!";
+        } else {
+            balance += amount;
+
+            document.getElementById("result").innerHTML =
+                "Money Deposited Successfully!<br>" +
+                "Updated Balance: Rs. " + balance.toFixed(2);
+        }
+    }
+
+    function withdraw() {
+        let amount = parseFloat(
+            prompt("Enter Amount to Withdraw:")
+        );
+
+        if (!Number.isFinite(amount) || amount <= 0) {
+            document.getElementById("result").innerHTML =
+                "Invalid Amount!";
+        } else if (amount > balance) {
+            document.getElementById("result").innerHTML =
+                "Insufficient Balance!";
+        } else {
+            balance -= amount;
+
+            document.getElementById("result").innerHTML =
+                "Please Collect Your Cash.<br>" +
+                "Remaining Balance: Rs. " + balance.toFixed(2);
+        }
+    }
+
+    function changePin() {
+        let newPin = prompt("Enter New 4-Digit PIN:");
+
+        if (newPin !== null &&
+            /^[0-9]{4}$/.test(newPin)) {
+
+            pin = newPin;
+
+            document.getElementById("result").innerHTML =
+                "PIN Changed Successfully!";
+        } else if (newPin !== null) {
+            document.getElementById("result").innerHTML =
+                "Please Enter a Valid 4-Digit PIN.";
+        }
+    }
+
+    function logout() {
+        document.getElementById("menu").classList.add("hidden");
+        document.getElementById("login").classList.remove("hidden");
+
+        document.getElementById("pin").value = "";
+        document.getElementById("result").innerHTML =
+            "Select an Option";
+    }
+
+</script>
+
+</body>
+</html>
